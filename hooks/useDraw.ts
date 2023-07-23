@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react"
 
 const useDraw = (onDraw: ({ctx, currentPoint, prevPoint}: Draw) => void) => {
     const [mouseDown, setMouseDown] = useState<boolean>(false)
+    const [turn, setTurn] = useState<boolean>(false)
     
     const canvasRef = useRef<HTMLCanvasElement | null>(null)
     const prevPoint = useRef<Point | null>(null)
@@ -18,6 +19,8 @@ const useDraw = (onDraw: ({ctx, currentPoint, prevPoint}: Draw) => void) => {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height)
     }
+
+    const handleTurnOffOrTurnOn = () => setTurn(!turn)
 
     useEffect(() => {
 
@@ -51,6 +54,10 @@ const useDraw = (onDraw: ({ctx, currentPoint, prevPoint}: Draw) => void) => {
             }
         } 
 
+        const mouseMoveChoosePalette = (e: MouseEvent) => {
+            console.log(e)
+        }
+
         const mouseUpHandler = () => {
             setMouseDown(false)
 
@@ -64,18 +71,25 @@ const useDraw = (onDraw: ({ctx, currentPoint, prevPoint}: Draw) => void) => {
             window.addEventListener('mouseup', mouseUpHandler)
         }
 
+        if (turn) {
+            window.addEventListener('mousemove', mouseMoveChoosePalette)
+        }
+
         // Remove events methods
 
         return () => {
             canvasRef?.current?.removeEventListener('mousemove', handler)
             window.removeEventListener('mouseup', mouseUpHandler)
+            window.removeEventListener('mousemove', mouseMoveChoosePalette)
         }
     }, [onDraw])
 
     return {
         canvasRef,
         onMouseDown,
-        clearPicker
+        clearPicker,
+        handleTurnOffOrTurnOn,
+        turn
     }
 }
 

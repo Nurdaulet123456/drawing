@@ -12,7 +12,8 @@ const HomePage = () => {
     setIsErasing((prevState) => !prevState);
   };
 
-  const { canvasRef, onMouseDown, clearPicker } = useDraw(drawLine);
+  const { canvasRef, onMouseDown, clearPicker, handleTurnOffOrTurnOn, turn } =
+    useDraw(drawLine);
 
   function drawLine({ prevPoint, currentPoint, ctx }: Draw) {
     const { x: currX, y: currY } = currentPoint;
@@ -59,6 +60,14 @@ const HomePage = () => {
             style={{ backgroundColor: colorPicker }}
           >
             {!isErasing ? "Рисовать" : "Ластик"}
+          </button>
+
+          <button
+            className="btn"
+            style={{ backgroundColor: colorPicker }}
+            onClick={handleTurnOffOrTurnOn}
+          >
+            Палитра: {turn ? 'Вкл' : 'Выкл'}
           </button>
 
           <input
